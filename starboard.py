@@ -16,10 +16,10 @@ count = 5
 TOKEN = "<TOKEN>"
 
 # Enter the channel ID of the starboard
-channel_id = 389571709470113793
+channel_id = 0
 
 # Enter the bot prefix
-bot_prefix = "!starbamiel"
+bot_prefix = ";]"
 
 ### ------- END CONFIG ------- ###
 
