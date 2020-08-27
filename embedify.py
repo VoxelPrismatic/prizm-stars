@@ -1,3 +1,8 @@
+### LICENSE
+# This code is licensed under GPLv2. All projects using it 
+# **MUST** remain open source. The code is provided 'as-is',
+# so feel free to modify it as much as you like.
+
 ### IMPORTANT NOTICE
 # This file is almost a 100% copy from my own bot. I've written this code a
 # long time ago and am too lazy to change it. It works great, so I won't
