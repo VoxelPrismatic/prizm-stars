@@ -1,13 +1,4 @@
-import discord
-import asyncio
-from discord.ext import commands
-from discord.ext.commands import Bot
-import embedify
-import database as dbman
-
-bot = commands.Bot(
-    command_prefix = "!starbamiel"
-)
+### ------ START CONFIG ------ ###
 
 # Add your list of emojis
 emojis = [
@@ -23,6 +14,29 @@ count = 5
 
 # Enter the bot token here
 TOKEN = "<TOKEN>"
+
+# Enter the channel ID of the starboard
+channel_id = 389571709470113793
+
+# Enter the bot prefix
+bot_prefix = "!starbamiel"
+
+### ------- END CONFIG ------- ###
+
+# WARNING: Do not edit below this line unless
+#       you know *exactly* what you're doing.
+# -------------------------------------------
+
+import discord
+import asyncio
+from discord.ext import commands
+from discord.ext.commands import Bot
+import embedify
+import database as dbman
+
+bot = commands.Bot(
+    command_prefix = bot_prefix
+)
 
 # Only used when the reaction emoji is completely missing
 class FalseReaction:
@@ -45,8 +59,11 @@ async def from_rct_payload(payload):
 
 # Updates the starboard
 async def plug_starboard(msg, emojis):
-    stars = msg.guild.get_channel(389571709470113793)
+    global channel_id
+    stars = msg.guild.get_channel(channel_id)
     starred = []
+
+    # Count emojis
     for reaction in msg.reactions:
         if str(reaction.emoji) in emojis:
             starred.append(str(reaction.count) + "x" + str(reaction.emoji))
@@ -66,6 +83,8 @@ async def plug_starboard(msg, emojis):
         ],
         thumb = str(msg.author.avatar_url)
     )
+
+    # Get the attachments
     attachments = [att.url for att in msg.attachments]
     if len(attachments):
         embed.add_field(
@@ -78,6 +97,8 @@ async def plug_starboard(msg, emojis):
             embed.set_image(url = attachments[0])
         except:
             pass
+
+    # Either post a new star or update the existing one
     stars_id = dbman.get('starboard', 'starboard_id', message_id = msg.id)
     try:
         if not stars_id:
@@ -119,7 +140,7 @@ async def handle_reaction_remove(reaction, user):
         await chn.send(f"`{ex}` line {ex.__traceback__.tb_lineno}")
 
 
-# Reaction add only
+# Reaction add only...
 async def handle_reaction_add(reaction, user):
     global emojis, count
     chn = reaction.message.channel
@@ -171,6 +192,7 @@ async def on_raw_reaction_remove(payload):
 
 @bot.listen()
 async def on_raw_message_delete(payload):
+    # Clean out the starboard database in case it gets unstarred
     stars_id = dbman.get('starboard', 'starboard_id', message_id = payload.message_id)
     if stars_id:
         dbman.remove('starboard', starboard_id = stars_id, message_id = payload.message_id)
@@ -182,6 +204,7 @@ async def on_raw_message_delete(payload):
 
 @bot.listen()
 async def on_ready():
+    # Neat status thing
     await bot.change_presence(
         activity = discord.Activity(
             type = 3,
