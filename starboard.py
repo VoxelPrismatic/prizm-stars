@@ -133,7 +133,7 @@ async def handle_reaction_remove(reaction, user):
                 await plug_starboard(msg, emojis)
             # Check if below threshold
             elif count > 0 and count > cc:
-                stars = msg.guild.get_channel(dbman.get('star', 'channel', id = msg.guild.id))
+                stars = msg.guild.get_channel(channel_id)
                 stars_id = dbman.get('starboard', 'starboard_id', message_id = msg.id)
                 if stars_id:
                     stars_msg = await stars.fetch_message(stars_id)
