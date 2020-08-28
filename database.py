@@ -33,13 +33,7 @@ def save():
 
 save_timer = None
 def timeout_save():
-    global save_timer
-    try:
-        save_timer.cancel()
-    except:
-        pass
-    save_timer = threading.Timer(5, save) # basically window.setTimeout(save, 5000)
-    save_timer.start()
+    save()
 
 def kwarg(**kwargs):
     if len(kwargs):
